@@ -6,8 +6,6 @@
 
 #include "ProjectPage.h"
 
-#include "PolyFMCore.h"
-
 class Project {
 public:
     Project(juce::String name, ModuleCore* core) : page(new ProjectPage(core)), name(name), core(core) {
@@ -18,12 +16,12 @@ public:
     ModuleCore* core;
 };
 
-class JDMainComponent  : public juce::AudioAppComponent, public juce::MidiInputCallback, public juce::ChangeListener
+class TestModuleComponent  : public juce::AudioAppComponent, public juce::MidiInputCallback, public juce::ChangeListener
 {
 public:
     //==============================================================================
-    JDMainComponent();
-    ~JDMainComponent() override;
+    TestModuleComponent(std::vector<Project*>projects);
+    ~TestModuleComponent() override;
 
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
@@ -41,10 +39,7 @@ public:
 private:
     vector<std::unique_ptr<juce::MidiInput>> midiInputs;
     
-    
     juce::TabbedComponent tabs { juce::TabbedButtonBar::TabsAtTop };
-    
-    PolyFMCore polyFm;
     
     ModuleCore* core;
 
@@ -52,5 +47,5 @@ private:
 
     int outChannelCount = 2;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JDMainComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestModuleComponent)
 };

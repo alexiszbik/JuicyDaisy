@@ -1,11 +1,9 @@
-#include "JDMainComponent.h"
+#include "TestModuleComponent.h"
 
 //==============================================================================
-JDMainComponent::JDMainComponent()
+TestModuleComponent::TestModuleComponent(std::vector<Project*>projects) : projects(projects)
 {
     addAndMakeVisible(tabs);
-    
-    projects.push_back(new Project("PolyFM", &polyFm));
     
     for (auto& project : projects) {
         tabs.addTab(project->name, juce::Colours::darkblue, project->page.get(), true);
@@ -51,7 +49,7 @@ JDMainComponent::JDMainComponent()
 }
 
 
-JDMainComponent::~JDMainComponent()
+TestModuleComponent::~TestModuleComponent()
 {
     for (auto& input : midiInputs) {
         input->stop();
@@ -61,7 +59,7 @@ JDMainComponent::~JDMainComponent()
 
 
 //==============================================================================
-void JDMainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
+void TestModuleComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
     for (auto& project : projects) {
         project->core->init(outChannelCount, sampleRate);
@@ -69,7 +67,7 @@ void JDMainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleR
     
 }
 
-void JDMainComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
+void TestModuleComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
     if (source == &tabs.getTabbedButtonBar())
     {
         int selectedIndex = tabs.getCurrentTabIndex();
@@ -77,7 +75,7 @@ void JDMainComponent::changeListenerCallback(juce::ChangeBroadcaster* source) {
     }
 }
 
-void JDMainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) {
+void TestModuleComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) {
     
     if (message.isNoteOn()) {
         core->processMIDI(MIDIMessageType::kNoteOn, message.getChannel(), message.getNoteNumber(), message.getVelocity());
@@ -92,7 +90,7 @@ void JDMainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const j
     }
 }
 
-void JDMainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
+void TestModuleComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
     juce::ScopedNoDenormals noDenormals;
     
@@ -109,17 +107,17 @@ void JDMainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buf
     core->process(data, buffer->getNumSamples());
 }
 
-void JDMainComponent::releaseResources()
+void TestModuleComponent::releaseResources()
 {
 }
 
 //==============================================================================
-void JDMainComponent::paint (juce::Graphics& g)
+void TestModuleComponent::paint (juce::Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 }
 
-void JDMainComponent::resized()
+void TestModuleComponent::resized()
 {
     tabs.setBounds(getLocalBounds());
 }
