@@ -16,6 +16,19 @@ public:
     ModuleCore* core;
 };
 
+class ConsoleDisplayManager : public IDisplayManager {
+public:
+    void Write(const char* l0=nullptr, const char* l1=nullptr, const char* l2=nullptr, const char* l3=nullptr, bool now=false) override {
+        
+    }
+    virtual void WriteLine(uint8_t lineIdx, const char* str)  override {
+        
+    }
+    virtual void WriteNow(const char* l0=nullptr, const char* l1=nullptr, const char* l2=nullptr, const char* l3=nullptr) override {
+        
+    }
+};
+
 class TestModuleComponent  : public juce::AudioAppComponent, public juce::MidiInputCallback, public juce::ChangeListener
 {
 public:
@@ -46,6 +59,8 @@ private:
     vector<Project*> projects;
 
     int outChannelCount = 2;
+    
+    ConsoleDisplayManager consoleDisplay;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestModuleComponent)
 };

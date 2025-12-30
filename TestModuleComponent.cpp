@@ -46,6 +46,8 @@ TestModuleComponent::TestModuleComponent(std::vector<Project*>projects) : projec
     for (auto& input : midiInputs) {
         input->start();
     }
+    
+    core->setDisplayManager(&consoleDisplay);
 }
 
 
