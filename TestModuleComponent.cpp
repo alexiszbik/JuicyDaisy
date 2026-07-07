@@ -1,7 +1,7 @@
 #include "TestModuleComponent.h"
 
 //==============================================================================
-TestModuleComponent::TestModuleComponent(std::vector<Project*>projects) : projects(projects)
+TestModuleComponent::TestModuleComponent(std::vector<Project*>projects, bool useInput) : useInput(useInput), projects(projects)
 {
     addAndMakeVisible(tabs);
     
@@ -96,7 +96,9 @@ void TestModuleComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo&
 {
     juce::ScopedNoDenormals noDenormals;
     
-    bufferToFill.clearActiveBufferRegion();
+    if (!useInput) {
+        bufferToFill.clearActiveBufferRegion();
+    }
     auto buffer = bufferToFill.buffer;
     
     float* data[buffer->getNumChannels()];
@@ -104,7 +106,15 @@ void TestModuleComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo&
     for (int channel = 0; channel < buffer->getNumChannels(); ++channel)
     {
         data[channel] = buffer->getWritePointer (channel);
+        if (channel > 0 && useInput) {
+            for (int sample = 0; sample < bufferToFill.numSamples; sample++) {
+                data[channel][sample] = data[0][sample];
+            }
+        }
+        
     }
+    
+    
     
     core->process(data, buffer->getNumSamples());
 }

@@ -33,7 +33,7 @@ class TestModuleComponent  : public juce::AudioAppComponent, public juce::MidiIn
 {
 public:
     //==============================================================================
-    TestModuleComponent(std::vector<Project*>projects);
+    TestModuleComponent(std::vector<Project*>projects, bool useInput = false);
     ~TestModuleComponent() override;
 
     //==============================================================================
@@ -49,7 +49,11 @@ public:
     virtual void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) override;
     virtual void changeListenerCallback(juce::ChangeBroadcaster* source) override;
     
+    
+    
 private:
+    bool useInput = false;
+    
     vector<std::unique_ptr<juce::MidiInput>> midiInputs;
     
     juce::TabbedComponent tabs { juce::TabbedButtonBar::TabsAtTop };
